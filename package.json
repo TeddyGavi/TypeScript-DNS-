@@ -1,5 +1,28 @@
 {
+  "name": "ts-dns",
+  "description": "(John Crickett Coding Challenge)[https://codingchallenges.fyi/challenges/challenge-dns-resolver/] (DNS-primer)[https://courses.cs.duke.edu//fall16/compsci356/DNS/DNS-primer.pdf]",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "test"
+  },
   "devDependencies": {
     "typescript": "^5.2.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeddyGavi/TypeScript-DNS-.git"
+  },
+  "keywords": [
+    "John Cricket",
+    "DNS",
+    "TypeScript",
+    "TS"
+  ],
+  "author": "Matt Davis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TeddyGavi/TypeScript-DNS-/issues"
+  },
+  "homepage": "https://github.com/TeddyGavi/TypeScript-DNS-#readme"
 }
