@@ -49,7 +49,7 @@ AA              Authoritative Answer - this bit is valid in responses,
   */
 export default class Header implements IHeader {
   id: number
-  qr: boolean
+  qr: number
   constructor(id, qr) {
     this.id = id
     this.qr = qr
