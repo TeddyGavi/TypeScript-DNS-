@@ -20,9 +20,45 @@ The header contains the following fields:
 export default class Header implements IHeader {
   id: number
   qr: number
+  opcode: number
+  aa: number
   tc: number
-  constructor(id, qr) {
+  rd: number
+  ra: number
+  z: number
+  rcode: number
+  qdcount: number
+  qdcode: number
+  nscount: number
+  arcount: number
+
+  constructor(
+    id: number,
+    qr: number,
+    opcode: number,
+    aa: number,
+    tc: number,
+    rd: number,
+    ra: number,
+    z: number,
+    rcode: number,
+    qdcode: number,
+    qdcount: number,
+    nscount: number,
+    arcount: number
+  ) {
     this.id = id
     this.qr = qr
+    this.opcode = opcode
+    this.aa = aa
+    this.tc = tc
+    this.rd = rd
+    this.ra = ra
+    this.z = z
+    this.rcode = rcode
+    this.qdcode = qdcode
+    this.qdcount = qdcount
+    this.nscount = nscount
+    this.arcount = arcount
   }
 }

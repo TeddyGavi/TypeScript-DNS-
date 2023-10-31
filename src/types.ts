@@ -55,9 +55,48 @@ interface IHeader {
    */
 
   z: number
+
+  /**
+   * @description 4 bit field is set as part of responses.
+   *              0 -- no error condition
+   *              1 -- format error, the server was unable to interpret the query
+   *              2 -- server failure
+   *              3 -- name error -
+   *              4 -- server does not support this type of request
+   *              5 -- refused
+   *              6 - 15 -- reserved for future
+   
+   
+   * @type {number}
+   */
+
   rcode: number
+
+  /**
+   * @description unsigned 16 bit int specifying number of entries in question sections
+   * @type {number}
+   */
+
   qdcount: number
+
+  /**
+   * @description unsigned 16 bit, specifying the number of resource records in the answer section
+   * @type {number}
+   */
+
   ancount: number
+
+  /**
+   * @description unsigned 16 bit, specifying the number of name services records in the authority records section
+   * @type {number}
+   */
+
   nscount: number
+
+  /**
+   * @description unsigned 16 bit, specifying the number of resource records inaddtional records section
+   * @type {number}
+   */
+
   arcount: number
 }
