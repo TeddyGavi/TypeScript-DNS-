@@ -28,6 +28,7 @@ export default class Header implements IHeader {
   z: number
   rcode: number
   qdcount: number
+  ancount: number
   qdcode: number
   nscount: number
   arcount: number
@@ -44,6 +45,7 @@ export default class Header implements IHeader {
     rcode: number,
     qdcode: number,
     qdcount: number,
+    ancount: number,
     nscount: number,
     arcount: number
   ) {
@@ -58,6 +60,7 @@ export default class Header implements IHeader {
     this.rcode = rcode
     this.qdcode = qdcode
     this.qdcount = qdcount
+    this.ancount = ancount
     this.nscount = nscount
     this.arcount = arcount
   }
