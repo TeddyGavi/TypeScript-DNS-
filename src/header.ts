@@ -1,3 +1,4 @@
+import buffer from 'bitwise/buffer'
 /*
 The header contains the following fields:
                                     1  1  1  1  1  1
@@ -63,5 +64,16 @@ export default class Header implements IHeader {
     this.ancount = ancount
     this.nscount = nscount
     this.arcount = arcount
+  }
+  static fromBuffer(buffer: Buffer) {
+    return new Header({
+      id: buffer.readUInt(buffer, 0, 16),
+      qr: buffer.readUInt(buffer, 16, 1),
+      opcode : buffer.readUint(buffer, 17, 4 )
+      aa: buffer.readUint(buffer, 21,1 ) === 1,
+      tc: buffer.readUInt(buffer, 22,1) === 1,
+      rd: buffer.readUint(buffer, 23, 1 === 1
+ 
+    })
   }
 }
