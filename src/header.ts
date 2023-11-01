@@ -1,5 +1,5 @@
-import bit from 'bitwise'
 import { IHeader } from './types'
+import bitwise from 'bitwise'
 /*
 The header contains the following fields:
                                     1  1  1  1  1  1
@@ -77,21 +77,78 @@ export default class Header implements IHeader {
     this.nscount = nscount
     this.arcount = arcount
   }
+
   static fromBuffer(buffer: Buffer) {
     return new Header({
-      id: bit.buffer.readUInt(buffer, 0, 16),
-      qr: bit.buffer.readUInt(buffer, 16, 1),
-      opcode: bit.buffer.readUInt(buffer, 17, 4),
-      aa: bit.buffer.readUInt(buffer, 21, 1) || 1,
-      tc: bit.buffer.readUInt(buffer, 22, 1) || 1,
-      rd: bit.buffer.readUInt(buffer, 23, 1) || 1,
-      ra: bit.buffer.readUInt(buffer, 24, 1) || 1,
-      z: bit.buffer.readUInt(buffer, 25, 3),
-      rcode: bit.buffer.readUInt(buffer, 28, 4),
-      qdcount: bit.buffer.readUInt(buffer, 32, 16),
-      ancount: bit.buffer.readUInt(buffer, 48, 16),
-      nscount: bit.buffer.readUInt(buffer, 64, 16),
-      arcount: bit.buffer.readUInt(buffer, 80, 16),
+      id: bitwise.buffer.readUInt(buffer, 0, 16),
+      qr: bitwise.buffer.readUInt(buffer, 16, 1),
+      opcode: bitwise.buffer.readUInt(buffer, 17, 4),
+      aa: bitwise.buffer.readUInt(buffer, 21, 1),
+      tc: bitwise.buffer.readUInt(buffer, 22, 1),
+      rd: bitwise.buffer.readUInt(buffer, 23, 1),
+      ra: bitwise.buffer.readUInt(buffer, 24, 1),
+      z: bitwise.buffer.readUInt(buffer, 25, 3),
+      rcode: bitwise.buffer.readUInt(buffer, 28, 4),
+      qdcount: bitwise.buffer.readUInt(buffer, 32, 16),
+      ancount: bitwise.buffer.readUInt(buffer, 48, 16),
+      nscount: bitwise.buffer.readUInt(buffer, 64, 16),
+      arcount: bitwise.buffer.readUInt(buffer, 80, 16),
+    })
+  }
+
+  toBuffer(): Buffer {
+    const header = Buffer.alloc(12) //12 bytes or 96 bits
+    //insertion based off left shifting by number of bytes to skip over! ie opposite of the creation with bitwise
+    header.writeUInt16BE(this.id, 0)
+    header.writeUInt16BE(
+      (this.qr << 15) |
+        (this.opcode << 11) |
+        (this.aa << 10) |
+        (this.tc << 9) |
+        (this.rd << 8) |
+        (this.ra << 7) |
+        (this.z << 4) |
+        this.rcode,
+      2
+    )
+
+    header.writeUInt16BE(this.qdcount, 4)
+    header.writeUInt16BE(this.ancount, 6)
+    header.writeUInt16BE(this.nscount, 8)
+    header.writeUInt16BE(this.arcount, 10)
+    return header
+  }
+
+  // factory :\
+  public static createHeader(
+    id: number,
+    qr: number,
+    opcode: number,
+    aa: number,
+    tc: number,
+    rd: number,
+    ra: number,
+    z: number,
+    rcode: number,
+    qdcount: number,
+    ancount: number,
+    nscount: number,
+    arcount: number
+  ): Header {
+    return new Header({
+      id,
+      qr,
+      opcode,
+      aa,
+      tc,
+      rd,
+      ra,
+      z,
+      rcode,
+      qdcount,
+      ancount,
+      nscount,
+      arcount,
     })
   }
 }
