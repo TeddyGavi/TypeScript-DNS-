@@ -1,4 +1,4 @@
-interface IHeader {
+export interface IHeader {
   //Octet structure
   /**
    * @description id is 16 bit unsigned (positive) integer
@@ -94,9 +94,32 @@ interface IHeader {
   nscount: number
 
   /**
-   * @description unsigned 16 bit, specifying the number of resource records inaddtional records section
+   * @description unsigned 16 bit, specifying the number of resource records in additional records section
    * @type {number}
    */
 
   arcount: number
+}
+
+export interface IQuestion {
+  /**
+   * @description a domain name represented as a sequence of labels, where each label consists of a length octet followed by that number of octets.  The domain name terminates with the zero length octet for the null label of the root.  Note that this field may be an odd number of octets; no padding is used.
+   * @type {number}
+   */
+
+  qname: number
+
+  /**
+   * @description  a two octet code which specifies the type of the query. The values for this field include all codes valid for a TYPE field, together with some more general codes which can match more than one type of RR.
+   * @type {number}
+   */
+
+  qtype: number
+
+  /**
+   * @description     a two octet code that specifies the class of the query. For example, the QCLASS field is IN for the Internet.
+   * @type {number}
+   */
+
+  qclass: number
 }
