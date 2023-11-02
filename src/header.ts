@@ -1,9 +1,8 @@
-import { IHeader } from './types'
 /*
 The header contains the following fields:
-                                    1  1  1  1  1  1
-      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+1  1  1  1  1  1
+0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     |                      ID                       |
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
@@ -16,7 +15,8 @@ The header contains the following fields:
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     |                    ARCOUNT                    |
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-*/
+    */
+import { IHeader } from './types'
 
 export default class Header implements IHeader {
   id: number
@@ -47,21 +47,7 @@ export default class Header implements IHeader {
     ancount,
     nscount,
     arcount,
-  }: {
-    id: number
-    qr: number
-    opcode: number
-    aa: number
-    tc: number
-    rd: number
-    ra: number
-    z: number
-    rcode: number
-    ancount: number
-    qdcount: number
-    nscount: number
-    arcount: number
-  }) {
+  }: IHeader) {
     this.id = id
     this.qr = qr
     this.opcode = opcode

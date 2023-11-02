@@ -1,5 +1,3 @@
-import { QCLASS, QTYPE } from './enums'
-import { IQName, IQuestion } from './types'
 /* 
 The question section is used to carry the "question" in most queries,
 i.e., the parameters that define what is being asked.  The section
@@ -7,7 +5,7 @@ contains QDCOUNT (usually 1) entries, each of the following format:
 
                                     1  1  1  1  1  1
       0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+      +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     |                                               |
     /                     QNAME                     /
     /                                               /
@@ -16,7 +14,10 @@ contains QDCOUNT (usually 1) entries, each of the following format:
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     |                     QCLASS                    |
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-*/
+    */
+
+import { QCLASS, QTYPE } from './enums'
+import { IQName, IQuestion } from './types'
 
 export default class Question implements IQuestion {
   qname: IQName

@@ -1,4 +1,4 @@
-import { QCLASS, QTYPE } from './enums'
+import { CLASS, QCLASS, QTYPE, TYPE } from './enums'
 
 export interface IHeader {
   //Octet structure
@@ -147,4 +147,84 @@ export interface IQuestion {
    */
 
   qclass: QCLASS
+}
+
+export interface IResourceRecord {
+  /**
+   * @description the name of the node to which this resource record pertains,  The domain name that was queried, in the same format as the QNAME in the questions.
+   * @type {IQName}
+   */
+
+  name: IQName
+
+  /**
+   * @description Two octets containing one of th type codes. This field specifies the meaning of the data in the RDATA field.
+   * @type {TYPE}
+   */
+
+  type: TYPE
+
+  /**
+   * @description Two octets which specify the class of the data in the RDATA field. You should expect 0x0001 for this project, representing Internet addresses.
+   * @type {CLASS}
+   */
+
+  rrclass: CLASS
+
+  /**
+   * @description unsigned 32 bit integer, the number of seconds the results can be cached
+   * @type {number}
+   */
+
+  ttl: number
+
+  /**
+   * @description unsigned 16bit integer the length of the RDATA field
+   * @type {number}
+   */
+
+  rdlength: number
+
+  /**
+   * @description   a variable length string of octets that describes the resource. The format of this information varies according o the TYPE and CLASS of the resource record. For example, the if the TYPE is A and the CLASS is IN, the RDATA ield is a 4 octet ARPA Internet address.
+   * @type {string}
+   */
+
+  rdata: string
+}
+
+export interface IMessage {
+  /**
+   * @description the header is always present, and includes fields that specify which of the remaining sections are present and also specify whether the message is a query or a response or a standard query
+   * @type {IHeader}
+   */
+
+  header: IHeader
+
+  /**
+   * @description the question for the server!
+   * @type {IQuestion}
+   */
+
+  question: IQuestion
+
+  /**
+   * @description Resource record format which answers the question!
+   * @type {IResourseRecord}
+   */
+
+  answer?: IResourceRecord
+
+  /**
+   * @description RR format that point to the authoritative name server
+   * @type {IResourceRecord}
+   */
+
+  authority?: IResourceRecord
+
+  /**
+   * @description contains responses that relate to the query but are not strictly answers to the question
+   * @type {IResourceRecord}
+   */
+  additional?: IResourceRecord
 }

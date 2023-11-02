@@ -1,5 +1,3 @@
-import { IQName } from './types'
-
 /* The name field is an encoded version of the host name string, so if we’re looking up dns.google.com it will be encoded as the following (bytes) 3dns6google3com0. 
 
 I need to take a string from command line and turn it into byte string, then this needs to be encoded
@@ -8,17 +6,13 @@ THIS is then added to the question as the QName
 
 */
 
+import { IQName } from './types'
+
 export default class Name implements IQName {
   labels: string[]
   pointer: number | null
 
-  constructor({
-    labels,
-    pointer,
-  }: {
-    labels: string[]
-    pointer: number | null
-  }) {
+  constructor({ labels, pointer }: IQName) {
     this.labels = labels
     this.pointer = pointer
   }

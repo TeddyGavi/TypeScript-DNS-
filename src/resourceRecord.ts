@@ -26,3 +26,24 @@ Each resource record has the following format:
     /                                               /
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 */
+
+import { CLASS, TYPE } from './enums'
+import { IQName, IResourceRecord } from './types'
+
+export default class ResourceRecord implements IResourceRecord {
+  name: IQName
+  type: TYPE
+  rrclass: CLASS
+  ttl: number
+  rdlength: number
+  rdata: string
+
+  constructor({ name, type, rrclass, ttl, rdlength, rdata }: IResourceRecord) {
+    this.name = name
+    this.type = type
+    this.rrclass = rrclass
+    this.ttl = ttl
+    this.rdlength = rdlength
+    this.rdata = rdata
+  }
+}
