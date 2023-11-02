@@ -24,17 +24,26 @@ export default class Name implements IQName {
   }
 
   toBuffer(): Buffer {
-    return Buffer.alloc(1)
+    const name: Buffer[] = []
+
+    for (const label of this.labels) {
+      const length = Buffer.from([label.length])
+      const bufferLabel = Buffer.from(label)
+      name.push(Buffer.concat([length, bufferLabel]))
+    }
+
+    name.push(Buffer.from([0]))
+    return Buffer.concat(name)
   }
 
   public static create(name: string): Name {
     const domainSplit = name.split('.')
 
-    for (let i = 0; i < domainSplit.length; i++) {
-      const length = domainSplit[i].length
-      domainSplit[i] = length + domainSplit[i]
-      if (i === domainSplit.length - 1) domainSplit[i] = domainSplit[i] + '0'
-    }
+    // for (let i = 0; i < domainSplit.length; i++) {
+    //   const length = domainSplit[i].length
+    //   domainSplit[i] = length + domainSplit[i]
+    //   if (i === domainSplit.length - 1) domainSplit[i] = domainSplit[i] + '0'
+    // }
     return new Name({ labels: domainSplit, pointer: null })
   }
 }
