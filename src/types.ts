@@ -1,3 +1,5 @@
+import { QCLASS, QTYPE } from './enums'
+
 export interface IHeader {
   //Octet structure
   /**
@@ -105,25 +107,44 @@ export interface IHeader {
   arcount: number
 }
 
+export interface IQName {
+  /**
+   * @description A QName should contain a sequence of labels, where each label consist of a length octet followed by that number of octets. The domain name terminates with the zero length octet for the nul label of the root
+   * @example For example, if the domain name is "www.example.com," it would be represented as ["3www", "7example", "3com"] in the QName class.
+   * @type {string[]}
+   */
+
+  labels: string[]
+
+  /**
+   * @description points to the offset to use to when compression is used, ie in a packet the first two bits are 1's. This allows the domain name in a message to be either:
+   * • a sequence of labels ending in a zero octet
+   * • a pointer
+   * • a sequence of labels ending with a pointer
+   */
+
+  pointer: number | null
+}
+
 export interface IQuestion {
   /**
    * @description a domain name represented as a sequence of labels, where each label consists of a length octet followed by that number of octets.  The domain name terminates with the zero length octet for the null label of the root.  Note that this field may be an odd number of octets; no padding is used.
-   * @type {number}
+   * @type {IName}
    */
 
-  qname: number
+  qname: IQName
 
   /**
    * @description  a two octet code which specifies the type of the query. The values for this field include all codes valid for a TYPE field, together with some more general codes which can match more than one type of RR.
-   * @type {number}
+   * @type {QTYPE}
    */
 
-  qtype: number
+  qtype: QTYPE
 
   /**
    * @description     a two octet code that specifies the class of the query. For example, the QCLASS field is IN for the Internet.
-   * @type {number}
+   * @type {QCLASS}
    */
 
-  qclass: number
+  qclass: QCLASS
 }

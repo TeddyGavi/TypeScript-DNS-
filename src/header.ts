@@ -1,5 +1,4 @@
 import { IHeader } from './types'
-import bitwise from 'bitwise'
 /*
 The header contains the following fields:
                                     1  1  1  1  1  1
