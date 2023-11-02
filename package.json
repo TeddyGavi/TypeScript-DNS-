@@ -4,10 +4,11 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "scripts": {
-    "test": "test",
+    "test": "jest --watch",
     "build": "tsc -p ."
   },
   "devDependencies": {
+    "@types/jest": "^29.5.7",
     "@types/node": "^20.8.9",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",

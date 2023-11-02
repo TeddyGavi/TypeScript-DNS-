@@ -78,8 +78,43 @@ export default class Header implements IHeader {
     this.arcount = arcount
   }
 
-  static fromBuffer(buffer: Buffer) {
+  static fromBuffer(buffer: Buffer): Header {
+    const id = buffer.readUInt16BE(0) // 0 byte
+    const secondByte = buffer.readUInt16BE(2) // starts at 3rd byte
+
+    // pull out specific bits by shifting the LSB over to the 15 bit position then mask all bits needed with binary 1
+    const qr = (secondByte >> 15) & 1 // 1 bit of 2 byte starting at 0
+    const opcode = (secondByte >> 11) & 0xf // shift 4 -15 then mask the last 4 bits 1111 binary is 15 is F in hex
+    const aa = (secondByte >> 10) & 1
+    const tc = (secondByte >> 9) & 1
+    const rd = (secondByte >> 8) & 1
+    const ra = (secondByte >> 7) & 1
+    const z = (secondByte >> 4) & 0x7
+    const rcode = secondByte & 0xf
+
+    //the next byte values are all full 16 bits each
+    const qdcount = buffer.readUInt16BE(4)
+    const ancount = buffer.readUInt16BE(6)
+    const nscount = buffer.readUInt16BE(8)
+    const arcount = buffer.readUInt16BE(10)
+
     return new Header({
+      id,
+      qr,
+      opcode,
+      aa,
+      tc,
+      rd,
+      ra,
+      z,
+      rcode,
+      qdcount,
+      ancount,
+      nscount,
+      arcount,
+    })
+
+    /*     return new Header({
       id: bitwise.buffer.readUInt(buffer, 0, 16),
       qr: bitwise.buffer.readUInt(buffer, 16, 1),
       opcode: bitwise.buffer.readUInt(buffer, 17, 4),
@@ -93,7 +128,7 @@ export default class Header implements IHeader {
       ancount: bitwise.buffer.readUInt(buffer, 48, 16),
       nscount: bitwise.buffer.readUInt(buffer, 64, 16),
       arcount: bitwise.buffer.readUInt(buffer, 80, 16),
-    })
+    }) */
   }
 
   toBuffer(): Buffer {
