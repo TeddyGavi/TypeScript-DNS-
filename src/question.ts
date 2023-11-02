@@ -36,8 +36,32 @@ export default class Question implements IQuestion {
     const qtype = buffer.readUInt16BE(qnameLength / 8)
     const qclass = buffer.readUInt16BE(2 + qnameLength / 8)
 
+    if (qtype !== 1) {
+      throw new Error(`Unsupported QTYPE value: ${qtype}`)
+    }
+
+    if (qclass !== 1) {
+      throw new Error(`Unsupported QCLASS value: ${qclass}`)
+    }
+
     return new Question({ qname, qtype, qclass })
   }
 
-  // toBuffer(): Buffer {}
+  toBuffer(): Buffer {
+    const qname = this.qname.toBuffer()
+    const qnameLength = qname.length // bits!
+    const totalLength = qnameLength / 8 + 2 + 2
+    const question = Buffer.alloc(totalLength)
+
+    qname.copy(question, 0, 0, qnameLength / 8) // copy the qname Buffer into the question buffer
+
+    question.writeUInt16BE(this.qtype, qnameLength / 8)
+    question.writeUInt16BE(this.qclass, qnameLength / 8 + 2)
+    return question
+  }
+
+  public static create(name: string): Question {
+    //only support host address and internet questions
+    return new Question({ qname: qName.create(name), qtype: 1, qclass: 1 })
+  }
 }

@@ -16,7 +16,10 @@ export default class qName implements IQName {
     this.labels = labels
     this.pointer = pointer
   }
-
+  /**
+   * @method length
+   * @returns length of the name as *BITS!*
+   */
   get length(): number {
     // this will be the length of each label * 8 (8 bits per byte)
 
@@ -24,12 +27,6 @@ export default class qName implements IQName {
       return total + part.length + 1
     }, 1)
     return bytes * 8
-  }
-
-  public static create(name: string): qName {
-    const domainSplit = name.split('.')
-
-    return new qName({ labels: domainSplit, pointer: null })
   }
 
   static fromBuffer(buffer: Buffer): qName {
@@ -53,10 +50,6 @@ export default class qName implements IQName {
     return new qName({ labels, pointer: null })
   }
 
-  public toASCII(): string {
-    return this.labels.join('.')
-  }
-
   toBuffer(): Buffer {
     const name: Buffer[] = []
 
@@ -68,5 +61,15 @@ export default class qName implements IQName {
 
     name.push(Buffer.from([0]))
     return Buffer.concat(name)
+  }
+
+  public toASCII(): string {
+    return this.labels.join('.')
+  }
+
+  public static create(name: string): qName {
+    const domainSplit = name.split('.')
+
+    return new qName({ labels: domainSplit, pointer: null })
   }
 }

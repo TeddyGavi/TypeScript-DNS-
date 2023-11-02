@@ -15,10 +15,39 @@ describe('Question', () => {
 
     const question = Question.fromBuffer(buffer)
 
-    // Add assertions to check if the Question instance is correctly created
     expect(question).toBeInstanceOf(Question)
     expect(question.qname).toBeInstanceOf(QName)
     expect(question.qtype).toBe(QTYPE.A)
     expect(question.qclass).toBe(QCLASS.IN)
+  })
+
+  describe('Question Errors', () => {
+    //currently anything other than qtype 1 and qclass 1 are not allowed
+    it('should throw an error for unsupported QTYPE', () => {
+      const qnameBuffer = Buffer.from(
+        '03777777076578616d706c6503636f6d00',
+        'hex'
+      )
+      const qtypeBuffer = Buffer.from([0x00, 0xff]) // Unsupported QTYPE
+      const qclassBuffer = Buffer.from([0x00, 0x01])
+
+      const buffer = Buffer.concat([qnameBuffer, qtypeBuffer, qclassBuffer])
+      expect(() => Question.fromBuffer(buffer)).toThrow(
+        `Unsupported QTYPE value: 255`
+      )
+    })
+    it('should throw an error for an unsupported QCLASS', () => {
+      const qnameBuffer = Buffer.from(
+        '03777777076578616d706c6503636f6d00',
+        'hex'
+      )
+      const qtypeBuffer = Buffer.from([0x00, 0x01])
+      const qclassBuffer = Buffer.from([0x00, 0xff])
+      const buffer = Buffer.concat([qnameBuffer, qtypeBuffer, qclassBuffer])
+
+      expect(() => Question.fromBuffer(buffer)).toThrow(
+        `Unsupported QCLASS value: 255`
+      )
+    })
   })
 })

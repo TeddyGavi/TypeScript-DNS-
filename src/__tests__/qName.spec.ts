@@ -30,22 +30,19 @@ describe('qName Class...', () => {
       expect(qnameBuffer).toEqual(expected)
     })
 
-    /*  
-    INCORRECT BUFFER
     it('should convert a qName instance to a DNS qName buffer', () => {
       const name = qName.create('www.example.com')
-      
+
       const qnameBuffer = name.toBuffer()
-      
+
       // Expected buffer based on the labels
       const expectedBuffer = Buffer.from(
-        '03677777076578616d706c6503636f6d00',
+        '03777777076578616d706c6503636f6d00',
         'hex'
-        )
-        console.log(qnameBuffer, expectedBuffer)
-        
-        expect(qnameBuffer).toEqual(expectedBuffer)
-      }) */
+      )
+      expect(qnameBuffer).toEqual(expectedBuffer)
+      expect(name).toBeInstanceOf(qName)
+    })
   })
   describe('fromBuffer', () => {
     it('should convert qName buffer to proper labels', () => {
