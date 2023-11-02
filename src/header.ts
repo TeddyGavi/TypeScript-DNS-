@@ -98,22 +98,6 @@ export default class Header implements IHeader {
       nscount,
       arcount,
     })
-
-    /*     return new Header({
-      id: bitwise.buffer.readUInt(buffer, 0, 16),
-      qr: bitwise.buffer.readUInt(buffer, 16, 1),
-      opcode: bitwise.buffer.readUInt(buffer, 17, 4),
-      aa: bitwise.buffer.readUInt(buffer, 21, 1),
-      tc: bitwise.buffer.readUInt(buffer, 22, 1),
-      rd: bitwise.buffer.readUInt(buffer, 23, 1),
-      ra: bitwise.buffer.readUInt(buffer, 24, 1),
-      z: bitwise.buffer.readUInt(buffer, 25, 3),
-      rcode: bitwise.buffer.readUInt(buffer, 28, 4),
-      qdcount: bitwise.buffer.readUInt(buffer, 32, 16),
-      ancount: bitwise.buffer.readUInt(buffer, 48, 16),
-      nscount: bitwise.buffer.readUInt(buffer, 64, 16),
-      arcount: bitwise.buffer.readUInt(buffer, 80, 16),
-    }) */
   }
 
   toBuffer(): Buffer {

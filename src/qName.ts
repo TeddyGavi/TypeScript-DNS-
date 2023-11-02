@@ -8,7 +8,7 @@ THIS is then added to the question as the QName
 
 import { IQName } from './types'
 
-export default class Name implements IQName {
+export default class qName implements IQName {
   labels: string[]
   pointer: number | null
 
@@ -23,17 +23,16 @@ export default class Name implements IQName {
     const bytes = this.labels.reduce((total, part) => {
       return total + part.length + 1
     }, 1)
-
     return bytes * 8
   }
 
-  public static create(name: string): Name {
+  public static create(name: string): qName {
     const domainSplit = name.split('.')
 
-    return new Name({ labels: domainSplit, pointer: null })
+    return new qName({ labels: domainSplit, pointer: null })
   }
 
-  static fromBuffer(buffer: Buffer): Name {
+  static fromBuffer(buffer: Buffer): qName {
     const labels: string[] = []
     let position = 0
 
@@ -51,7 +50,7 @@ export default class Name implements IQName {
       labels.push(copy.toString())
       position += length
     }
-    return new Name({ labels, pointer: null })
+    return new qName({ labels, pointer: null })
   }
 
   public toASCII(): string {

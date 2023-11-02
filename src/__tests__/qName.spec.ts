@@ -1,26 +1,26 @@
-import Name from '../qName'
+import qName from '../qName'
 
 describe('qName Class...', () => {
   it('should create a Name instance with labels', () => {
     const labels = ['www', 'example', 'com']
     const pointer = null
-    const name = new Name({ labels, pointer })
+    const name = new qName({ labels, pointer })
 
-    expect(name).toBeInstanceOf(Name)
+    expect(name).toBeInstanceOf(qName)
     expect(name.labels).toEqual(labels)
     expect(name.pointer).toBe(pointer)
   })
 
   it('Creates a new instance with a correct string label property', () => {
-    const name = Name.create('www.example.com')
+    const name = qName.create('www.example.com')
     const expected = { labels: ['www', 'example', 'com'], pointer: null }
 
     expect(name).toEqual(expected)
   })
 
   describe('toBuffer', () => {
-    it('should convert a Name instance to a DNS QName buffer', () => {
-      const name = Name.create('www.northeastern.edu')
+    it('should convert a qName instance to a DNS qName buffer', () => {
+      const name = qName.create('www.northeastern.edu')
       const qnameBuffer = name.toBuffer()
 
       const expected = Buffer.from(
@@ -32,8 +32,8 @@ describe('qName Class...', () => {
 
     /*  
     INCORRECT BUFFER
-    it('should convert a Name instance to a DNS QName buffer', () => {
-      const name = Name.create('www.example.com')
+    it('should convert a qName instance to a DNS qName buffer', () => {
+      const name = qName.create('www.example.com')
       
       const qnameBuffer = name.toBuffer()
       
@@ -48,13 +48,13 @@ describe('qName Class...', () => {
       }) */
   })
   describe('fromBuffer', () => {
-    it('should convert QName buffer to proper labels', () => {
+    it('should convert qName buffer to proper labels', () => {
       const buffer = Buffer.from(
         '037777770c6e6f7274686561737465726e0365647500',
         'hex'
       )
 
-      const name = Name.fromBuffer(buffer)
+      const name = qName.fromBuffer(buffer)
       const expected = ['www', 'northeastern', 'edu']
       expect(name.labels).toEqual(expected)
     })
@@ -66,7 +66,7 @@ describe('qName Class...', () => {
         '037777770c6e6f7274686561737465726e0365647500',
         'hex'
       )
-      const name = Name.fromBuffer(buffer).toASCII()
+      const name = qName.fromBuffer(buffer).toASCII()
       const expected = 'www.northeastern.edu'
       expect(name).toBe(expected)
     })

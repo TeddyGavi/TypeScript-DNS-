@@ -17,31 +17,27 @@ contains QDCOUNT (usually 1) entries, each of the following format:
     */
 
 import { QCLASS, QTYPE } from './enums'
-import { IQName, IQuestion } from './types'
+import qName from './qName'
+import { IQuestion } from './types'
 
 export default class Question implements IQuestion {
-  qname: IQName
+  qname: qName
   qtype: QTYPE
   qclass: QCLASS
 
-  constructor({
-    qname,
-    qtype,
-    qclass,
-  }: {
-    qname: IQName
-    qtype: QTYPE
-    qclass: QCLASS
-  }) {
+  constructor({ qname, qtype, qclass }: IQuestion) {
     this.qname = qname
     this.qtype = qtype
     this.qclass = qclass
   }
-  // static fromBuffer(buffer: Buffer): Question {
+  static fromBuffer(buffer: Buffer): Question {
+    const qname = qName.fromBuffer(buffer)
+    const qnameLength = qname.length // bits!
+    const qtype = buffer.readUInt16BE(qnameLength / 8)
+    const qclass = buffer.readUInt16BE(2 + qnameLength / 8)
 
-  // }
+    return new Question({ qname, qtype, qclass })
+  }
 
-  // toBuffer(): Buffer {
-
-  // }
+  // toBuffer(): Buffer {}
 }
