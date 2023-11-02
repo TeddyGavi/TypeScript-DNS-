@@ -23,6 +23,47 @@ export default class Name implements IQName {
     this.pointer = pointer
   }
 
+  get length(): number {
+    // this will be the length of each label * 8 (8 bits per byte)
+
+    const bytes = this.labels.reduce((total, part) => {
+      return total + part.length + 1
+    }, 1)
+
+    return bytes * 8
+  }
+
+  public static create(name: string): Name {
+    const domainSplit = name.split('.')
+
+    return new Name({ labels: domainSplit, pointer: null })
+  }
+
+  static fromBuffer(buffer: Buffer): Name {
+    const labels: string[] = []
+    let position = 0
+
+    while (position < buffer.length) {
+      const length = buffer.readUInt8(position)
+      position++
+
+      if (length === 0) {
+        break
+      }
+
+      const copy = Uint8Array.prototype.slice
+        .call(buffer)
+        .slice(position, position + length)
+      labels.push(copy.toString())
+      position += length
+    }
+    return new Name({ labels, pointer: null })
+  }
+
+  public toASCII(): string {
+    return this.labels.join('.')
+  }
+
   toBuffer(): Buffer {
     const name: Buffer[] = []
 
@@ -34,16 +75,5 @@ export default class Name implements IQName {
 
     name.push(Buffer.from([0]))
     return Buffer.concat(name)
-  }
-
-  public static create(name: string): Name {
-    const domainSplit = name.split('.')
-
-    // for (let i = 0; i < domainSplit.length; i++) {
-    //   const length = domainSplit[i].length
-    //   domainSplit[i] = length + domainSplit[i]
-    //   if (i === domainSplit.length - 1) domainSplit[i] = domainSplit[i] + '0'
-    // }
-    return new Name({ labels: domainSplit, pointer: null })
   }
 }

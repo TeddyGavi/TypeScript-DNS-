@@ -29,21 +29,46 @@ describe('qName Class...', () => {
       )
       expect(qnameBuffer).toEqual(expected)
     })
+
     /*  
     INCORRECT BUFFER
     it('should convert a Name instance to a DNS QName buffer', () => {
       const name = Name.create('www.example.com')
-
+      
       const qnameBuffer = name.toBuffer()
-
+      
       // Expected buffer based on the labels
       const expectedBuffer = Buffer.from(
         '03677777076578616d706c6503636f6d00',
         'hex'
+        )
+        console.log(qnameBuffer, expectedBuffer)
+        
+        expect(qnameBuffer).toEqual(expectedBuffer)
+      }) */
+  })
+  describe('fromBuffer', () => {
+    it('should convert QName buffer to proper labels', () => {
+      const buffer = Buffer.from(
+        '037777770c6e6f7274686561737465726e0365647500',
+        'hex'
       )
-      console.log(qnameBuffer, expectedBuffer)
 
-      expect(qnameBuffer).toEqual(expectedBuffer)
-    }) */
+      const name = Name.fromBuffer(buffer)
+      const expected = ['www', 'northeastern', 'edu']
+      expect(name.labels).toEqual(expected)
+    })
+  })
+
+  describe('toString', () => {
+    it('should create a ascii string from labels', () => {
+      const buffer = Buffer.from(
+        '037777770c6e6f7274686561737465726e0365647500',
+        'hex'
+      )
+      const name = Name.fromBuffer(buffer).toASCII()
+      const expected = 'www.northeastern.edu'
+      expect(name).toBe(expected)
+    })
   })
 })
