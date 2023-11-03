@@ -28,10 +28,11 @@ Each resource record has the following format:
 */
 
 import { CLASS, TYPE } from './enums'
-import { IQName, IResourceRecord } from './types'
+import qName from './qName'
+import { IResourceRecord } from './types'
 
 export default class ResourceRecord implements IResourceRecord {
-  name: IQName
+  name: qName
   type: TYPE
   rrclass: CLASS
   ttl: number
@@ -45,5 +46,22 @@ export default class ResourceRecord implements IResourceRecord {
     this.ttl = ttl
     this.rdlength = rdlength
     this.rdata = rdata
+  }
+
+  static fromBuffer(buffer: Buffer): ResourceRecord {
+    const name = qName.fromBuffer(buffer)
+    const nameLength = name.length // bits!
+    const type = buffer.readUInt16BE(nameLength / 8)
+    const rrclass = buffer.readUInt16BE(nameLength / 8 + 2)
+    const ttl = buffer.readUInt32BE(nameLength / 8 + 4)
+    const rdlength = buffer.readUInt16BE(nameLength / 8 + 8)
+
+    if (type !== 1) {
+      throw new Error('Currently only A records are supported')
+    }
+    // 4 octect field for internet records
+    const rdata = buffer.readBigUInt64BE(nameLength / 8 + 10).toString()
+
+    return new ResourceRecord({ name, type, rrclass, ttl, rdlength, rdata })
   }
 }
