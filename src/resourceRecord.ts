@@ -48,6 +48,28 @@ export default class ResourceRecord implements IResourceRecord {
     this.rdata = rdata
   }
 
+  private IPfromRdata(): string {
+    const octets: number[] = []
+    for (let i = 0; i < this.rdata.length; i += 8) {
+      const split = this.rdata.slice(i, i + 8)
+      octets.push(parseInt(split, 2))
+    }
+    return octets.join('.')
+  }
+
+  /**
+   * @method getDataByRecord
+   * @description Takes in a record and returns the ip address
+   * @parm {record} @type {number}
+   */
+  public getDataByRecord(record: number): string {
+    // this could support other records in the future...?
+    if (record !== 1) {
+      throw new Error('Currently only A records are supported')
+    }
+    return this.IPfromRdata()
+  }
+
   static fromBuffer(buffer: Buffer): ResourceRecord {
     const name = qName.fromBuffer(buffer)
     const nameLength = name.length // bits!
@@ -60,7 +82,9 @@ export default class ResourceRecord implements IResourceRecord {
       throw new Error('Currently only A records are supported')
     }
     // 4 octect field for internet records
-    const rdata = buffer.readBigUInt64BE(nameLength / 8 + 10).toString()
+    // need to make a slice to read ONLY this section
+    const rdataSlice = buffer.subarray(nameLength / 8 + 10, buffer.length)
+    const rdata = rdataSlice.readUInt32BE(0).toString(2)
 
     return new ResourceRecord({ name, type, rrclass, ttl, rdlength, rdata })
   }

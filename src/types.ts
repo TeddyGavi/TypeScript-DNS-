@@ -118,7 +118,7 @@ export interface IQName {
   labels: string[]
 
   /**
-   * @description points to the offset to use to when compression is used, ie in a packet the first two bits are 1's. This allows the domain name in a message to be either:
+   * @description points to the offset to use to when compression is used, ie in a packet the first two bits are 1's. This allows the domain name in a message to be either:This allows the domain name in a message to be either:
    * • a sequence of labels ending in a zero octet
    * • a pointer
    * • a sequence of labels ending with a pointer
@@ -159,7 +159,7 @@ export interface IResourceRecord {
   name: qName
 
   /**
-   * @description Two octets containing one of th type codes. This field specifies the meaning of the data in the RDATA field.
+   * @description Two octets containing one of the type codes. This field specifies the meaning of the data in the RDATA field.
    * @type {TYPE}
    */
 
