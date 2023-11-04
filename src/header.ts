@@ -100,7 +100,7 @@ export default class Header implements IHeader {
     })
   }
 
-  toBuffer(): Buffer {
+  public toBuffer(): Buffer {
     const header = Buffer.alloc(12) //12 bytes or 96 bits
     //insertion based off left shifting by number of bytes to skip over! ie opposite of the creation with bitwise
     header.writeUInt16BE(this.id, 0)

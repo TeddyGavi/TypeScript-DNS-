@@ -62,6 +62,7 @@ export default class ResourceRecord implements IResourceRecord {
    * @description Takes in a record and returns the ip address
    * @parm {record} @type {number}
    */
+
   public getDataByRecord(record: number): string {
     // this could support other records in the future...?
     if (record !== 1) {

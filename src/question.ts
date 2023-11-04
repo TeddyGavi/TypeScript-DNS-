@@ -30,6 +30,12 @@ export default class Question implements IQuestion {
     this.qtype = qtype
     this.qclass = qclass
   }
+
+  get length() {
+    // Bytes
+    return this.qname.length / 8 + 4
+  }
+
   static fromBuffer(buffer: Buffer): Question {
     const qname = qName.fromBuffer(buffer)
     const qnameLength = qname.length // bits!
@@ -47,7 +53,7 @@ export default class Question implements IQuestion {
     return new Question({ qname, qtype, qclass })
   }
 
-  toBuffer(): Buffer {
+  public toBuffer(): Buffer {
     const qname = this.qname.toBuffer()
     const qnameLength = qname.length // bits!
     const totalLength = qnameLength / 8 + 2 + 2
