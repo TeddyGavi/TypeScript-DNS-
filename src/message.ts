@@ -55,6 +55,6 @@ export default class Message implements IMessage {
   }
 
   public toBuffer(): Buffer {
-    return Buffer.concat([this.header, this.question])
+    return Buffer.concat([this.header.toBuffer(), this.question.toBuffer()])
   }
 }

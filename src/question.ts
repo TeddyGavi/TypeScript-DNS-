@@ -31,6 +31,11 @@ export default class Question implements IQuestion {
     this.qclass = qclass
   }
 
+  /**
+   * @method get length
+   * @returns lentgh of name in *BYTES!*
+   */
+
   get length() {
     // Bytes
     return this.qname.length / 8 + 4
