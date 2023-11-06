@@ -18,15 +18,15 @@ export default class qName implements IQName {
   }
   /**
    * @method length
-   * @returns length of the name as *BITS!*
+   * @returns length of the name as *BYTES!*
    */
   get length(): number {
-    // this will be the length of each label * 8 (8 bits per byte)
+    // this will be the length of each label
 
     const bytes = this.labels.reduce((total, part) => {
       return total + part.length + 1
     }, 1)
-    return bytes * 8
+    return bytes
   }
 
   static fromBuffer(buffer: Buffer): qName {
@@ -40,7 +40,6 @@ export default class qName implements IQName {
       if (length === 0) {
         break
       }
-
       const copy = Uint8Array.prototype.slice
         .call(buffer)
         .slice(position, position + length)

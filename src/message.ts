@@ -46,12 +46,13 @@ export default class Message implements IMessage {
 
   static fromBuffer(buffer: Buffer): Message {
     // we know header is 12 bytes long
+    const headerLength = 12
     // question is the length of the qname plus 4 bytes
     const header = Header.fromBuffer(buffer)
-    const question = Question.fromBuffer(buffer.subarray(12))
-    const answer = ResourceRecord.fromBuffer(
-      buffer.subarray(question.length / 8 + 4, buffer.length)
-    )
+    console.log(header)
+    const question = Question.fromBuffer(buffer.subarray(headerLength))
+    const answerOffset = headerLength + question.length
+    const answer = ResourceRecord.fromBuffer(buffer.subarray(answerOffset))
 
     return new Message(header, question, answer)
   }

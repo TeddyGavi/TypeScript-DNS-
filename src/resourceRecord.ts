@@ -73,18 +73,18 @@ export default class ResourceRecord implements IResourceRecord {
 
   static fromBuffer(buffer: Buffer): ResourceRecord {
     const name = qName.fromBuffer(buffer)
-    const nameLength = name.length // bits!
-    const type = buffer.readUInt16BE(nameLength / 8)
-    const rrclass = buffer.readUInt16BE(nameLength / 8 + 2)
-    const ttl = buffer.readUInt32BE(nameLength / 8 + 4)
-    const rdlength = buffer.readUInt16BE(nameLength / 8 + 8)
+    const length = name.length
+    const type = buffer.readUInt16BE(length)
+    const rrclass = buffer.readUInt16BE(length + 2)
+    const ttl = buffer.readUInt32BE(length + 4)
+    const rdlength = buffer.readUInt16BE(length + 8)
 
     if (type !== 1) {
       throw new Error('Currently only A records are supported')
     }
     // 4 octect field for internet records
     // need to make a slice to read ONLY this section
-    const rdataSlice = buffer.subarray(nameLength / 8 + 10, buffer.length)
+    const rdataSlice = buffer.subarray(length + 10, buffer.length)
     const rdata = rdataSlice.readUInt32BE(0).toString(2)
 
     return new ResourceRecord({ name, type, rrclass, ttl, rdlength, rdata })

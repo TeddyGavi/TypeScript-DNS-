@@ -33,19 +33,19 @@ export default class Question implements IQuestion {
 
   /**
    * @method get length
-   * @returns lentgh of name in *BITS!*
+   * @returns length of total question in BYTES
    */
 
   get length() {
-    // bits
-    return this.qname.length + 48
+    // Bytes
+    return this.qname.length + 4
   }
 
   static fromBuffer(buffer: Buffer): Question {
     const qname = qName.fromBuffer(buffer)
-    const qnameLength = qname.length // bits!
-    const qtype = buffer.readUInt16BE(qnameLength / 8)
-    const qclass = buffer.readUInt16BE(2 + qnameLength / 8)
+    const qnameLength = qname.length // bytes!
+    const qtype = buffer.readUInt16BE(qnameLength)
+    const qclass = buffer.readUInt16BE(2 + qnameLength)
 
     if (qtype !== 1) {
       throw new Error(`Unsupported QTYPE value: ${qtype}`)
@@ -60,14 +60,14 @@ export default class Question implements IQuestion {
 
   public toBuffer(): Buffer {
     const qname = this.qname.toBuffer()
-    const qnameLength = qname.length // bits!
-    const totalLength = qnameLength / 8 + 2 + 2
+    const qnameLength = qname.length // BYTES!
+    const totalLength = qnameLength + 4
     const question = Buffer.alloc(totalLength)
 
-    qname.copy(question, 0, 0, qnameLength / 8) // copy the qname Buffer into the question buffer
+    qname.copy(question, 0, 0, qnameLength) // copy the qname Buffer into the question buffer
 
-    question.writeUInt16BE(this.qtype, qnameLength / 8)
-    question.writeUInt16BE(this.qclass, qnameLength / 8 + 2)
+    question.writeUInt16BE(this.qtype, qnameLength)
+    question.writeUInt16BE(this.qclass, qnameLength + 2)
     return question
   }
 
