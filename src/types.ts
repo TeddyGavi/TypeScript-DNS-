@@ -217,7 +217,7 @@ export interface IMessage {
    * @type {ResourceRecord}
    */
 
-  answer?: ResourceRecord
+  answers?: ResourceRecord[]
 
   /**
    * @description RR format that point to the authoritative name server

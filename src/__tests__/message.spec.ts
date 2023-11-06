@@ -13,7 +13,11 @@ describe('Message Class...', () => {
       'hex'
     )
     const message = Message.fromBuffer(messageBuffer)
-    console.log(message.header)
+    expect(message).toBeInstanceOf(Message)
+    expect(message.header.id).toBe(22)
+    console.log(message.question.qname)
+    console.log(message!.answers!.map((ans) => ans.name.toASCII(messageBuffer)))
+    console.log(message!.answers!.map((ans) => ans.getDataByRecord(1)))
   })
 
   it('Creates a new Message with header and question sections', () => {

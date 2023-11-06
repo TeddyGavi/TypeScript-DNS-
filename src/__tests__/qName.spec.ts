@@ -63,7 +63,7 @@ describe('qName Class...', () => {
         '037777770c6e6f7274686561737465726e0365647500',
         'hex'
       )
-      const name = qName.fromBuffer(buffer).toASCII()
+      const name = qName.fromBuffer(buffer).toASCII(buffer)
       const expected = 'www.northeastern.edu'
       expect(name).toBe(expected)
     })

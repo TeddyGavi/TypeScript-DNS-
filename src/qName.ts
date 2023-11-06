@@ -21,7 +21,9 @@ export default class qName implements IQName {
    * @returns length of the name as *BYTES!*
    */
   get length(): number {
-    // this will be the length of each label
+    if (this.pointer) {
+      return 2
+    }
 
     const bytes = this.labels.reduce((total, part) => {
       return total + part.length + 1
@@ -39,12 +41,18 @@ export default class qName implements IQName {
 
       if (length === 0) {
         break
+      } else if (length >= 0xc0) {
+        const offset = ((length & 0x3f) << 8) + buffer.readUInt8(position)
+
+        const pointer = offset + buffer.length
+        return new qName({ labels, pointer })
+      } else {
+        const copy = Uint8Array.prototype.slice
+          .call(buffer)
+          .slice(position, position + length)
+        labels.push(copy.toString())
+        position += length
       }
-      const copy = Uint8Array.prototype.slice
-        .call(buffer)
-        .slice(position, position + length)
-      labels.push(copy.toString())
-      position += length
     }
     return new qName({ labels, pointer: null })
   }
@@ -62,8 +70,26 @@ export default class qName implements IQName {
     return Buffer.concat(name)
   }
 
-  public toASCII(): string {
-    return this.labels.join('.')
+  public toASCII(buffer: Buffer): string {
+    if (this.pointer) {
+      let position = this.pointer
+      const labels = []
+
+      while (position < buffer.length) {
+        const data = buffer.readUInt8(position)
+        position++
+
+        if (data === 0) {
+          break
+        }
+        const copy = buffer.subarray(position, position + data)
+        labels.push(copy.toString())
+        position += data
+      }
+      return this.labels.join('.')
+    } else {
+      return this.labels.join('.')
+    }
   }
 
   public static create(name: string): qName {

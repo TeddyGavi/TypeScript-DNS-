@@ -26,20 +26,20 @@ import { IMessage } from './types'
 export default class Message implements IMessage {
   header: Header
   question: Question
-  answer?: ResourceRecord | undefined
+  answers?: ResourceRecord[] | undefined
   authority?: ResourceRecord | undefined
   additional?: ResourceRecord | undefined
 
   constructor(
     header: Header,
     question: Question,
-    answer?: ResourceRecord,
+    answers?: ResourceRecord[],
     authority?: ResourceRecord,
     additional?: ResourceRecord
   ) {
     this.header = header
     this.question = question
-    this.answer = answer || undefined
+    this.answers = answers || undefined
     this.authority = authority || undefined
     this.additional = additional || undefined
   }
@@ -48,13 +48,18 @@ export default class Message implements IMessage {
     // we know header is 12 bytes long
     const headerLength = 12
     // question is the length of the qname plus 4 bytes
-    const header = Header.fromBuffer(buffer)
-    console.log(header)
+    const header = Header.fromBuffer(buffer.subarray(0, headerLength))
     const question = Question.fromBuffer(buffer.subarray(headerLength))
-    const answerOffset = headerLength + question.length
-    const answer = ResourceRecord.fromBuffer(buffer.subarray(answerOffset))
+    let answerOffset = headerLength + question.length
+    const answers = []
 
-    return new Message(header, question, answer)
+    for (let i = 0; i < header.ancount; i++) {
+      const answer = ResourceRecord.fromBuffer(buffer.subarray(answerOffset))
+      answers.push(answer)
+      answerOffset += answer.length
+    }
+
+    return new Message(header, question, answers)
   }
 
   public toBuffer(): Buffer {

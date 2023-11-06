@@ -57,6 +57,9 @@ export default class ResourceRecord implements IResourceRecord {
     return octets.join('.')
   }
 
+  get length() {
+    return this.name.length + this.rdlength + 10
+  }
   /**
    * @method getDataByRecord
    * @description Takes in a record and returns the ip address
