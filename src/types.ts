@@ -1,5 +1,8 @@
 import { CLASS, QCLASS, QTYPE, TYPE } from './enums'
+import Header from './header'
 import qName from './qName'
+import Question from './question'
+import ResourceRecord from './resourceRecord'
 
 export interface IHeader {
   //Octet structure
@@ -197,35 +200,35 @@ export interface IResourceRecord {
 export interface IMessage {
   /**
    * @description the header is always present, and includes fields that specify which of the remaining sections are present and also specify whether the message is a query or a response or a standard query
-   * @type {IHeader}
+   * @type {Header}
    */
 
-  header: IHeader
+  header: Header
 
   /**
    * @description the question for the server!
-   * @type {IQuestion}
+   * @type {Question}
    */
 
-  question: IQuestion
+  question: Question
 
   /**
    * @description Resource record format which answers the question!
-   * @type {IResourseRecord}
+   * @type {ResourceRecord}
    */
 
-  answer?: IResourceRecord
+  answer?: ResourceRecord
 
   /**
    * @description RR format that point to the authoritative name server
-   * @type {IResourceRecord}
+   * @type {ResourceRecord}
    */
 
-  authority?: IResourceRecord
+  authority?: ResourceRecord
 
   /**
    * @description contains responses that relate to the query but are not strictly answers to the question
-   * @type {IResourceRecord}
+   * @type {ResourceRecord}
    */
-  additional?: IResourceRecord
+  additional?: ResourceRecord
 }

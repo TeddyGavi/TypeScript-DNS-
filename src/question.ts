@@ -33,12 +33,12 @@ export default class Question implements IQuestion {
 
   /**
    * @method get length
-   * @returns lentgh of name in *BYTES!*
+   * @returns lentgh of name in *BITS!*
    */
 
   get length() {
-    // Bytes
-    return this.qname.length / 8 + 4
+    // bits
+    return this.qname.length + 48
   }
 
   static fromBuffer(buffer: Buffer): Question {

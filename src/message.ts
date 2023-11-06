@@ -49,7 +49,9 @@ export default class Message implements IMessage {
     // question is the length of the qname plus 4 bytes
     const header = Header.fromBuffer(buffer)
     const question = Question.fromBuffer(buffer.subarray(12))
-    const answer = ResourceRecord.fromBuffer(buffer.subarray(question.length))
+    const answer = ResourceRecord.fromBuffer(
+      buffer.subarray(question.length / 8 + 4, buffer.length)
+    )
 
     return new Message(header, question, answer)
   }
