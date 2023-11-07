@@ -25,9 +25,10 @@ export default class qName implements IQName {
       return 2
     }
 
-    const bytes = this.labels.reduce((total, part) => {
-      return total + part.length + 1
-    }, 1)
+    let bytes = 1
+    for (let i = 0; i < this.labels.length; i++) {
+      bytes += this.labels[i].length + 1
+    }
     return bytes
   }
 
@@ -44,12 +45,9 @@ export default class qName implements IQName {
       } else if (length >= 0xc0) {
         const offset = ((length & 0x3f) << 8) + buffer.readUInt8(position)
 
-        const pointer = offset + buffer.length
-        return new qName({ labels, pointer })
+        return new qName({ labels, pointer: offset })
       } else {
-        const copy = Uint8Array.prototype.slice
-          .call(buffer)
-          .slice(position, position + length)
+        const copy = buffer.subarray(position, position + length)
         labels.push(copy.toString())
         position += length
       }
@@ -86,7 +84,7 @@ export default class qName implements IQName {
         labels.push(copy.toString())
         position += data
       }
-      return this.labels.join('.')
+      return labels.join('.')
     } else {
       return this.labels.join('.')
     }

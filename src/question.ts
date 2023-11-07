@@ -43,6 +43,7 @@ export default class Question implements IQuestion {
 
   static fromBuffer(buffer: Buffer): Question {
     const qname = qName.fromBuffer(buffer)
+    console.log(qname)
     const qnameLength = qname.length // bytes!
     const qtype = buffer.readUInt16BE(qnameLength)
     const qclass = buffer.readUInt16BE(2 + qnameLength)
