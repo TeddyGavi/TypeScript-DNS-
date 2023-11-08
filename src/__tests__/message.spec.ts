@@ -21,17 +21,18 @@ describe('Message Class...', () => {
     const ips = message.answers?.map((an) => {
       return an.rdata
     })
-    console.log(ips)
+    expect(ips![0]).toBe('8.8.8.8')
+    expect(ips![1]).toBe('8.8.4.4')
   })
   it('Parses name and IP correctly', () => {
     const buffer = Buffer.from(
-      '00808180000100010000037777770578616d706c6503636f6d00c00c0001000100003c00047f000001',
+      '00160100000100000000000003646e7306676f6f676c6503636f6d0000010001',
       'hex'
     )
-    const header = Header.fromBuffer(buffer.subarray(0, 12))
-    const question = Question.fromBuffer(buffer.subarray(12))
 
-    console.log(header, question)
+    const message = Message.fromBuffer(buffer)
+    expect(message.header.id).toBe(22)
+    expect(message.question.qname.toASCII(buffer)).toBe('dns.google.com')
   })
   it('Creates a new Message with header and question sections', () => {
     const buffer = Buffer.from(

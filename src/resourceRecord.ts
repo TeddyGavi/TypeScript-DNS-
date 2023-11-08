@@ -50,6 +50,7 @@ export default class ResourceRecord implements IResourceRecord {
 
   private static IPfromRdata(buffer: Buffer): string {
     if (buffer.length !== 4) throw new Error(`Invalid IPv4 address..`)
+
     return buffer[0] + '.' + buffer[1] + '.' + buffer[2] + '.' + buffer[3]
   }
 
@@ -70,7 +71,12 @@ export default class ResourceRecord implements IResourceRecord {
     }
     // 4 octect field for internet records
     // need to make a slice to read ONLY this section
-    const rdataSlice = buffer.subarray(length + 10, buffer.length)
+    // possibly be more than one answer!
+    // so this needs to account for the start of the rdata at 10 bytes past the name, THEN
+    // end when we reach the end specified by the rdlength
+    const startOfRdata = length + 10
+    const endOfRdata = startOfRdata + rdlength
+    const rdataSlice = buffer.subarray(startOfRdata, endOfRdata)
     const rdata = this.IPfromRdata(rdataSlice)
 
     return new ResourceRecord({ name, type, rrclass, ttl, rdlength, rdata })
