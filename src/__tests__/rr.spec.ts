@@ -2,10 +2,8 @@ import { TYPE, CLASS } from '../enums'
 import ResourceRecord from '../resourceRecord'
 
 describe('ResourceRecord Class...', () => {
-  const nameBuffer = Buffer.from(
-    '037777770c6e6f7274686561737465726e0365647500',
-    'hex'
-  ) // northeastern
+  //in this case the name will be a pointer to the header, not needed here, using northeastern
+  const name = Buffer.from([0xc0, 0x0c])
   const typeBuffer = Buffer.from([0x00, 0x01]) // Assuming QTYPE A (1) in big-endian format
   const rrclassBuffer = Buffer.from([0x00, 0x01]) // Assuming QCLASS IN (1) in big-endian format
   const ttlBuffer = Buffer.from([0x00, 0x00, 0x00, 0x03c]) // 60
@@ -13,7 +11,7 @@ describe('ResourceRecord Class...', () => {
   const rdataBuffer = Buffer.from([0x9b, 0x21, 0x11, 0x44])
 
   const buffer = Buffer.concat([
-    nameBuffer,
+    name,
     typeBuffer,
     rrclassBuffer,
     ttlBuffer,
@@ -30,8 +28,7 @@ describe('ResourceRecord Class...', () => {
 
   describe('Correctly parses A record...', () => {
     it('Resolves correct IP Address from answer', () => {
-      const ip = answer.getDataByRecord(1)
-      expect(ip).toBe('155.33.17.68')
+      expect(answer.rdata).toBe('155.33.17.68')
     })
   })
 })

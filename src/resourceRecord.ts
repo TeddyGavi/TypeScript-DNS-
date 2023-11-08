@@ -48,30 +48,13 @@ export default class ResourceRecord implements IResourceRecord {
     this.rdata = rdata
   }
 
-  private IPfromRdata(): string {
-    const octets: number[] = []
-    for (let i = 0; i < this.rdata.length; i += 8) {
-      const split = this.rdata.slice(i, i + 8)
-      octets.push(parseInt(split, 2))
-    }
-    return octets.join('.')
+  private static IPfromRdata(buffer: Buffer): string {
+    if (buffer.length !== 4) throw new Error(`Invalid IPv4 address..`)
+    return buffer[0] + '.' + buffer[1] + '.' + buffer[2] + '.' + buffer[3]
   }
 
   get length() {
     return this.name.length + this.rdlength + 10
-  }
-  /**
-   * @method getDataByRecord
-   * @description Takes in a record and returns the ip address
-   * @parm {record} @type {number}
-   */
-
-  public getDataByRecord(record: number): string {
-    // this could support other records in the future...?
-    if (record !== 1) {
-      throw new Error('Currently only A records are supported')
-    }
-    return this.IPfromRdata()
   }
 
   static fromBuffer(buffer: Buffer): ResourceRecord {
@@ -88,7 +71,7 @@ export default class ResourceRecord implements IResourceRecord {
     // 4 octect field for internet records
     // need to make a slice to read ONLY this section
     const rdataSlice = buffer.subarray(length + 10, buffer.length)
-    const rdata = rdataSlice.readUInt32BE(0).toString(2)
+    const rdata = this.IPfromRdata(rdataSlice)
 
     return new ResourceRecord({ name, type, rrclass, ttl, rdlength, rdata })
   }

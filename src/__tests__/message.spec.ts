@@ -18,20 +18,20 @@ describe('Message Class...', () => {
     message.answers?.forEach((answer) => {
       expect(answer).toBeInstanceOf(ResourceRecord)
     })
+    const ips = message.answers?.map((an) => {
+      return an.rdata
+    })
+    console.log(ips)
   })
   it('Parses name and IP correctly', () => {
     const buffer = Buffer.from(
       '00808180000100010000037777770578616d706c6503636f6d00c00c0001000100003c00047f000001',
       'hex'
     )
-    const header = Header.fromBuffer(buffer)
+    const header = Header.fromBuffer(buffer.subarray(0, 12))
     const question = Question.fromBuffer(buffer.subarray(12))
+
     console.log(header, question)
-    // console.log(
-    //   message.answers?.forEach((answer) =>
-    //     console.log(answer.name.toASCII(buffer))
-    //   )
-    // )
   })
   it('Creates a new Message with header and question sections', () => {
     const buffer = Buffer.from(
