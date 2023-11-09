@@ -26,22 +26,35 @@ import { IMessage } from './types'
 export default class Message implements IMessage {
   header: Header
   question: Question
-  answers?: ResourceRecord[] | undefined
-  authority?: ResourceRecord | undefined
-  additional?: ResourceRecord | undefined
+  answers?: ResourceRecord[]
+  authority?: ResourceRecord[]
+  additional?: ResourceRecord[]
 
   constructor(
     header: Header,
     question: Question,
     answers?: ResourceRecord[],
-    authority?: ResourceRecord,
-    additional?: ResourceRecord
+    authority?: ResourceRecord[],
+    additional?: ResourceRecord[]
   ) {
     this.header = header
     this.question = question
-    this.answers = answers || undefined
-    this.authority = authority || undefined
-    this.additional = additional || undefined
+    this.answers = answers
+    this.authority = authority
+    this.additional = additional
+  }
+  private static createResourceRecordArray(
+    buffer: Buffer,
+    offset: number,
+    length: number
+  ): ResourceRecord[] {
+    const result: ResourceRecord[] = []
+    for (let i = 0; i < length; i++) {
+      const rr = ResourceRecord.fromBuffer(buffer.subarray(offset))
+      result.push(rr)
+      offset += rr.length
+    }
+    return result
   }
 
   static fromBuffer(buffer: Buffer): Message {
@@ -50,16 +63,55 @@ export default class Message implements IMessage {
     // question is the length of the qname plus 4 bytes
     const header = Header.fromBuffer(buffer.subarray(0, headerLength))
     const question = Question.fromBuffer(buffer.subarray(headerLength))
-    let answerOffset = headerLength + question.length
-    const answers = []
+    let answers: ResourceRecord[] = []
+    let authority: ResourceRecord[] = []
+    let additional: ResourceRecord[] = []
+    const answerOffset = headerLength + question.length
 
-    for (let i = 0; i < header.ancount; i++) {
-      const answer = ResourceRecord.fromBuffer(buffer.subarray(answerOffset))
-      answers.push(answer)
-      answerOffset += answer.length
+    if (header.ancount > 0) {
+      answers = Message.createResourceRecordArray(
+        buffer,
+        answerOffset,
+        header.ancount
+      )
     }
 
-    return new Message(header, question, answers)
+    if (header.nscount > 0) {
+      const authOffset = headerLength + question.length + answerOffset
+      authority = Message.createResourceRecordArray(
+        buffer,
+        authOffset,
+        header.nscount
+      )
+      const addtionalOffset =
+        headerLength + question.length + answerOffset + authOffset
+
+      if (header.arcount > 0) {
+        additional = Message.createResourceRecordArray(
+          buffer,
+          addtionalOffset,
+          header.arcount
+        )
+      }
+    }
+    // const authNameServer: null | ResourceRecord[] = null
+    // const additional: ResourceRecord[] = []
+    // for (let i = 0; i < header.ancount; i++) {
+    //   const answer = ResourceRecord.fromBuffer(buffer.subarray(answerOffset))
+    //   answers.push(answer)
+    //   answerOffset += answer.length
+    // }
+
+    // if (header.nscount > 0) {
+    //   let authOffset = headerLength + question.length + answerOffset
+    //   for (let i = 0; i < header.nscount; i++) {
+    //     const rr = ResourceRecord.fromBuffer(buffer.subarray(authOffset))
+    //     authNameServer.push(rr)
+    //     authOffset += rr.length
+    //   }
+    // }
+
+    return new Message(header, question, answers, authority, additional)
   }
 
   public toBuffer(): Buffer {

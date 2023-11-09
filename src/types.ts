@@ -224,11 +224,11 @@ export interface IMessage {
    * @type {ResourceRecord}
    */
 
-  authority?: ResourceRecord
+  authority?: ResourceRecord[]
 
   /**
    * @description contains responses that relate to the query but are not strictly answers to the question
    * @type {ResourceRecord}
    */
-  additional?: ResourceRecord
+  additional?: ResourceRecord[]
 }
