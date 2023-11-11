@@ -32,7 +32,7 @@ export default class Header implements IHeader {
   ancount: number
   nscount: number
   arcount: number
-
+  // TODO: default values of constructor
   constructor({
     id,
     qr,

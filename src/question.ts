@@ -47,11 +47,10 @@ export default class Question implements IQuestion {
     const qtype = buffer.readUInt16BE(qnameLength)
     const qclass = buffer.readUInt16BE(2 + qnameLength)
 
-    if (qtype !== 1) {
+    if (![QTYPE.A, QTYPE.NS].includes(qtype)) {
       throw new Error(`Unsupported QTYPE value: ${qtype}`)
     }
-
-    if (qclass !== 1) {
+    if (qclass !== QCLASS.IN) {
       throw new Error(`Unsupported QCLASS value: ${qclass}`)
     }
 

@@ -65,10 +65,6 @@ export default class ResourceRecord implements IResourceRecord {
     const rrclass = buffer.readUInt16BE(length + 2)
     const ttl = buffer.readUInt32BE(length + 4)
     const rdlength = buffer.readUInt16BE(length + 8)
-
-    if (type !== 1) {
-      throw new Error('Currently only A records are supported')
-    }
     // 4 octect field for internet records
     // need to make a slice to read ONLY this section
     // possibly be more than one answer!
@@ -77,8 +73,15 @@ export default class ResourceRecord implements IResourceRecord {
     const startOfRdata = length + 10
     const endOfRdata = startOfRdata + rdlength
     const rdataSlice = buffer.subarray(startOfRdata, endOfRdata)
-    const rdata = this.IPfromRdata(rdataSlice)
+    let rdata: string
 
+    if (TYPE.A === type) {
+      rdata = this.IPfromRdata(rdataSlice)
+    } else if (TYPE.NS === type) {
+      rdata = qName.fromBuffer(rdataSlice).toASCII(rdataSlice)
+    } else {
+      throw new Error(`Unsupported record type of ${type}`)
+    }
     return new ResourceRecord({ name, type, rrclass, ttl, rdlength, rdata })
   }
 }
