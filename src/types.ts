@@ -6,8 +6,7 @@ import ResourceRecord from './resourceRecord'
 
 export interface IHeader {
   //Octet structure
-  /**
-   * @description id is 16 bit unsigned (positive) integer
+  /** @description id is 16 bit unsigned (positive) integer
    * @type {number}
    */
 

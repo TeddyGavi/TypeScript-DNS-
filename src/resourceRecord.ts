@@ -49,9 +49,12 @@ export default class ResourceRecord implements IResourceRecord {
   }
 
   private static IPfromRdata(buffer: Buffer): string {
-    if (buffer.length !== 4) throw new Error(`Invalid IPv4 address..`)
+    if (buffer.length !== 4) {
+      throw new Error('Invalid IPv4 address.')
+    }
 
-    return buffer[0] + '.' + buffer[1] + '.' + buffer[2] + '.' + buffer[3]
+    const ip = `${buffer[0]}.${buffer[1]}.${buffer[2]}.${buffer[3]}`
+    return ip
   }
 
   get length() {

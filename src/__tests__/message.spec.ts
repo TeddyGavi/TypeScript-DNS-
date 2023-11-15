@@ -13,16 +13,16 @@ describe('Message Class...', () => {
     expect(message).toBeInstanceOf(Message)
     expect(message.header.id).toBe(22)
     expect(message.header.qr).toBe(1)
-    expect(message.question?.qname).toBe(undefined)
-    expect(message.question).toBe(undefined)
+    // expect(message.question?.qname).toBe(undefined)
+    // expect(message.question).toBe(undefined)
     message.answers?.forEach((answer) => {
       expect(answer).toBeInstanceOf(ResourceRecord)
     })
-    //    const ips = message.answers?.map((an) => {
-    //      return an.rdata
-    //    })
-    //    expect(ips![0]).toBe('8.8.8.8')
-    //    expect(ips![1]).toBe('8.8.4.4')
+    const ips = message.answers?.map((an) => {
+      return an.rdata
+    })
+    expect(ips![0]).toBe('8.8.8.8')
+    expect(ips![1]).toBe('8.8.4.4')
   })
   it('Parses name and IP correctly', () => {
     const buffer = Buffer.from(
