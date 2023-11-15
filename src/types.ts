@@ -210,7 +210,7 @@ export interface IMessage {
    * @type {Question}
    */
 
-  question: Question
+  question?: Question
 
   /**
    * @description Resource record format which answers the question!

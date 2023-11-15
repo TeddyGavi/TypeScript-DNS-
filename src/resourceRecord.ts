@@ -82,6 +82,7 @@ export default class ResourceRecord implements IResourceRecord {
     } else {
       throw new Error(`Unsupported record type of ${type}`)
     }
+    console.log(name, rdata)
     return new ResourceRecord({ name, type, rrclass, ttl, rdlength, rdata })
   }
 }
