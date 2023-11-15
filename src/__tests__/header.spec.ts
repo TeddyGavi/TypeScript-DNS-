@@ -30,10 +30,10 @@ describe('Header Class', () => {
       '00808180000100010000000003777777056b2d6e7574026575000001000103777777056b2d6e7574026575000001000100000e100004b91a9c18',
       'hex'
     )
-    const message = Message.fromBuffer(buffer)
+    const header = Header.fromBuffer(buffer)
 
-    expect(message.header).toBeInstanceOf(Header)
-    expect(message.header.id).toBe(128)
+    expect(header).toBeInstanceOf(Header)
+    expect(header.id).toBe(128)
   })
 
   it('should create a Header instance from a buffer', () => {
