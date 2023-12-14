@@ -16,22 +16,7 @@ export default class UDP {
 
   private parseRecords(records: ResourceRecord[]) {
     records.forEach((record) => {
-      if (record.type === TYPE.A) {
-        const header = Header.createHeader()
-        const question = Question.create('dns.google.com')
-        const message = new Message(header, question)
-        this.client.on('message', this.recieveMessage)
-        this.client.send(
-          message.toBuffer(),
-          53,
-          record.rdata,
-          (error, bytes) => {
-            if (error) this.client.close()
-
-            console.log('hi', bytes)
-          }
-        )
-      }
+      console.log(record.type, 'DATA:', record.rdata)
     })
   }
 
