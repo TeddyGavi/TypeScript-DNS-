@@ -48,13 +48,22 @@ export default class ResourceRecord implements IResourceRecord {
     this.rdata = rdata
   }
 
-  private static IPfromRdata(buffer: Buffer): string {
+  private static IPv4fromRdata(buffer: Buffer): string {
     if (buffer.length !== 4) {
       throw new Error('Invalid IPv4 address.')
     }
 
     const ip = `${buffer[0]}.${buffer[1]}.${buffer[2]}.${buffer[3]}`
     return ip
+  }
+
+  private static IPv6fromRdata(buffer: Buffer): string {
+    if (!buffer || buffer.length !== 16) {
+      throw new Error('Invalid IPv6 address')
+    } else {
+      const hexString = buffer.toString('hex')
+      return hexString.match(/.{1,4}/g)!.join(':')
+    }
   }
 
   get length() {
@@ -79,11 +88,12 @@ export default class ResourceRecord implements IResourceRecord {
     let rdata: string
 
     if (TYPE.A === type) {
-      rdata = this.IPfromRdata(rdataSlice)
+      rdata = this.IPv4fromRdata(rdataSlice)
     } else if (TYPE.NS === type) {
       rdata = qName.fromBuffer(rdataSlice).toASCII(rdataSlice)
     } else {
-      throw new Error(`Unsupported record type of ${type}`)
+      console.log(` record type of ${type}`)
+      rdata = this.IPv6fromRdata(rdataSlice)
     }
     return new ResourceRecord({ name, type, rrclass, ttl, rdlength, rdata })
   }

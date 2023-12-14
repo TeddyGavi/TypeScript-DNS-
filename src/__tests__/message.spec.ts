@@ -39,7 +39,7 @@ describe('Message Class...', () => {
       '00160100000100000000000003646e7306676f6f676c6503636f6d0000010001',
       'hex'
     )
-    const header = Header.createHeader(22, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+    const header = Header.createHeader({ rd: 1 })
     const question = Question.create('dns.google.com')
     const message = new Message(header, question)
     expect(message).toBeInstanceOf(Message)

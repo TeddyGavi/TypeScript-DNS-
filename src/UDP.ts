@@ -3,6 +3,7 @@ import Message from './message'
 import Header from './header'
 import Question from './question'
 import { TYPE } from './enums'
+import ResourceRecord from './resourceRecord'
 
 export default class UDP {
   private client: Socket
@@ -13,63 +14,64 @@ export default class UDP {
     this.send = this.send.bind(this)
   }
 
+  private parseRecords(records: ResourceRecord[]) {
+    records.forEach((record) => {
+      if (record.type === TYPE.A) {
+        const header = Header.createHeader()
+        const question = Question.create('dns.google.com')
+        const message = new Message(header, question)
+        this.client.on('message', this.recieveMessage)
+        this.client.send(
+          message.toBuffer(),
+          53,
+          record.rdata,
+          (error, bytes) => {
+            if (error) this.client.close()
+
+            console.log('hi', bytes)
+          }
+        )
+      }
+    })
+  }
+
   private recieveMessage(message: Buffer) {
     const messageRecieved = Message.fromBuffer(message)
 
     console.log(
+      'header:',
       messageRecieved.header,
+      'question:',
       messageRecieved.question,
-      messageRecieved.answers
+      'answers:',
+      messageRecieved.answers,
+      'auth:',
+      messageRecieved.authority,
+      'add:',
+      messageRecieved.additional
     )
-    // if (messageRecieved.answers) {
-    //   messageRecieved.answers.forEach((ans) => {
-    //     if (TYPE.A === ans.type) {
-    //       console.log(ans.rdata)
-    //     } else if (TYPE.NS === ans.type) {
-    //       const authNameServerIp = ans.rdata
-    //       console.log(ans.rdata)
-    //       const header = Header.createHeader(
-    //         22,
-    //         0,
-    //         0,
-    //         0,
-    //         0,
-    //         0,
-    //         0,
-    //         0,
-    //         0,
-    //         0,
-    //         0,
-    //         0,
-    //         0
-    //       )
-    //       const question = Question.create('dns.google.com')
-    //       const newMessage = new Message(header, question)
+    if (messageRecieved.answers && messageRecieved.answers.length > 0) {
+      this.parseRecords(messageRecieved.answers)
+    } else if (
+      messageRecieved.authority &&
+      messageRecieved.authority.length > 0
+    ) {
+      this.parseRecords(messageRecieved.authority)
+    } else if (
+      messageRecieved.additional &&
+      messageRecieved.additional.length > 0
+    ) {
+      this.parseRecords(messageRecieved.additional)
+    }
 
-    //       this.client.send(
-    //         newMessage.toBuffer(),
-    //         53,
-    //         authNameServerIp,
-    //         (error, bytes) => {
-    //           if (error) this.client.close()
-    //           console.log(
-    //             bytes,
-    //             `Sending another DNS query to authoritative name server: ${authNameServerIp}`
-    //           )
-    //         }
-    //       )
-    //     }
-    //   })
-    //   this.client.close()
-    // }
     this.client.close()
   }
-  public send() {
-    const header = Header.createHeader(22, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+  public send(ip: string = '198.41.0.4') {
+    const header = Header.createHeader()
     const question = Question.create('dns.google.com')
     const message = new Message(header, question)
     this.client.on('message', this.recieveMessage)
-    this.client.send(message.toBuffer(), 53, '198.41.0.4', (error, bytes) => {
+    this.client.send(message.toBuffer(), 53, ip, (error, bytes) => {
       if (error) this.client.close()
 
       console.log('hi', bytes)

@@ -125,35 +125,27 @@ export default class Header implements IHeader {
   }
 
   // factory :\
-  public static createHeader(
-    id: number,
-    qr: number,
-    opcode: number,
-    aa: number,
-    tc: number,
-    rd: number,
-    ra: number,
-    z: number,
-    rcode: number,
-    qdcount: number,
-    ancount: number,
-    nscount: number,
-    arcount: number
-  ): Header {
-    return new Header({
-      id,
-      qr,
-      opcode,
-      aa,
-      tc,
-      rd,
-      ra,
-      z,
-      rcode,
-      qdcount,
-      ancount,
-      nscount,
-      arcount,
-    })
+  public static createHeader(options?: Partial<IHeader>): Header {
+    const defaults = {
+      id: 22,
+      qr: 0,
+      opcode: 0,
+      aa: 0,
+      tc: 0,
+      rd: 0,
+      ra: 0,
+      z: 0,
+      rcode: 0,
+      qdcount: 1, // always one question?
+      ancount: 0,
+      nscount: 0,
+      arcount: 0,
+    }
+
+    const merge: IHeader = {
+      ...defaults,
+      ...options,
+    }
+    return new Header(merge)
   }
 }

@@ -104,6 +104,8 @@ export enum TYPE {
   MINFO = 14,
   MX = 15,
   TXT = 16,
+  //ADDTIONAL AAAA ie IPv6
+  AAAA = 28,
 }
 
 export enum CLASS {
