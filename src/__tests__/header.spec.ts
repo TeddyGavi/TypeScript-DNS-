@@ -1,5 +1,4 @@
 import Header from '../header'
-import Message from '../message'
 
 describe('Header Class', () => {
   // Test the creation of a Header instance

@@ -15,9 +15,20 @@ export default class UDP {
   }
 
   private parseRecords(records: ResourceRecord[]) {
-    records.forEach((record) => {
-      console.log(record.type, 'DATA:', record.rdata)
-    })
+    let newIp: string | undefined
+    for (const record of records) {
+      if (record.type === TYPE.A) {
+        newIp = record.rdata
+      } else if (record.type === TYPE.NS) {
+        this.send(record.rdata)
+      }
+    }
+    if (newIp) {
+      console.log('Found IP of record A', newIp)
+      this.client.close()
+    } else {
+      console.log('No A record found')
+    }
   }
 
   private recieveMessage(message: Buffer) {
@@ -48,12 +59,10 @@ export default class UDP {
     ) {
       this.parseRecords(messageRecieved.additional)
     }
-
-    this.client.close()
   }
-  public send(ip: string = '198.41.0.4') {
+  public send(ip: string = '198.41.0.4', domain = 'dns.google.com') {
     const header = Header.createHeader()
-    const question = Question.create('dns.google.com')
+    const question = Question.create(domain)
     const message = new Message(header, question)
     this.client.on('message', this.recieveMessage)
     this.client.send(message.toBuffer(), 53, ip, (error, bytes) => {

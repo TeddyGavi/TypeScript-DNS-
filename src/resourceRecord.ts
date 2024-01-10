@@ -85,6 +85,7 @@ export default class ResourceRecord implements IResourceRecord {
     const startOfRdata = length + 10
     const endOfRdata = startOfRdata + rdlength
     const rdataSlice = buffer.subarray(startOfRdata, endOfRdata)
+    console.log(rdataSlice)
     let rdata: string
 
     if (TYPE.A === type) {
@@ -92,9 +93,15 @@ export default class ResourceRecord implements IResourceRecord {
     } else if (TYPE.NS === type) {
       rdata = qName.fromBuffer(rdataSlice).toASCII(rdataSlice)
     } else {
-      console.log(` record type of ${type}`)
       rdata = this.IPv6fromRdata(rdataSlice)
     }
-    return new ResourceRecord({ name, type, rrclass, ttl, rdlength, rdata })
+    return new ResourceRecord({
+      name,
+      type,
+      rrclass,
+      ttl,
+      rdlength,
+      rdata,
+    })
   }
 }
