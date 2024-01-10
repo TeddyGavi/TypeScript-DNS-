@@ -19,7 +19,7 @@ export default class UDP {
     for (const record of records) {
       if (record.type === TYPE.A) {
         newIp = record.rdata
-      } else if (record.type === TYPE.NS) {
+      } else if (record.type === TYPE.NS && record.rdata) {
         this.send(record.rdata)
       }
     }
@@ -60,7 +60,7 @@ export default class UDP {
       this.parseRecords(messageRecieved.additional)
     }
   }
-  public send(ip: string = '198.41.0.4', domain = 'dns.google.com') {
+  public send(ip: string = '192.5.5.241', domain = 'dns.google.com') {
     const header = Header.createHeader()
     const question = Question.create(domain)
     const message = new Message(header, question)
