@@ -20,12 +20,11 @@ export default class UDP {
       if (record.type === TYPE.A) {
         newIp = record.rdata
       } else if (record.type === TYPE.NS && record.rdata) {
-        this.send(record.rdata)
+        console.log('record ns found')
       }
     }
     if (newIp) {
-      console.log('Found IP of record A', newIp)
-      this.client.close()
+      console.log(` found with ip ${newIp}`)
     } else {
       console.log('No A record found')
     }
@@ -47,7 +46,7 @@ export default class UDP {
       messageRecieved.additional
     )
     if (messageRecieved.answers && messageRecieved.answers.length > 0) {
-      this.parseRecords(messageRecieved.answers)
+      console.log(this.parseRecords(messageRecieved.answers))
     } else if (
       messageRecieved.authority &&
       messageRecieved.authority.length > 0
@@ -60,10 +59,11 @@ export default class UDP {
       this.parseRecords(messageRecieved.additional)
     }
   }
-  public send(ip: string = '192.5.5.241', domain = 'dns.google.com') {
+  public send(ip: string = '198.41.0.4', domain = 'dns.google.com') {
     const header = Header.createHeader()
     const question = Question.create(domain)
     const message = new Message(header, question)
+    console.log(message)
     this.client.on('message', this.recieveMessage)
     this.client.send(message.toBuffer(), 53, ip, (error, bytes) => {
       if (error) this.client.close()

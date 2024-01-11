@@ -85,7 +85,6 @@ export default class ResourceRecord implements IResourceRecord {
     const startOfRdata = length + 10
     const endOfRdata = startOfRdata + rdlength
     const rdataSlice = buffer.subarray(startOfRdata, endOfRdata)
-    console.log(rdataSlice)
     let rdata: string
 
     if (TYPE.A === type) {

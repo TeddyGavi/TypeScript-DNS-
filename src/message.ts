@@ -63,48 +63,9 @@ export default class Message implements IMessage {
     // question is the length of the qname plus 4 bytes
     const header = Header.fromBuffer(buffer.subarray(0, headerLength))
 
-    // const question =
-    //   header.qr === 0
-    //     ? Question.fromBuffer(buffer.subarray(headerLength))
-    //     : undefined
-    // const answerOffset = headerLength + ((question && question.length) || 0)
-    // const answers =
-    //   header.ancount > 0
-    //     ? Message.createResourceRecordArray(
-    //         buffer,
-    //         answerOffset,
-    //         header.ancount
-    //       )
-    //     : []
-    //
-    // const authOffset =
-    //   headerLength + ((question && question.length) || 0) + answerOffset
-    // const authority =
-    //   header.nscount > 0
-    //     ? Message.createResourceRecordArray(buffer, authOffset, header.nscount)
-    //     : []
-    //
-    // const additionalOffset =
-    //   headerLength +
-    //   ((question && question.length) || 0) +
-    //   answerOffset +
-    //   authOffset
-    // const additional =
-    //   header.arcount > 0
-    //     ? Message.createResourceRecordArray(
-    //         buffer,
-    //         additionalOffset,
-    //         header.arcount
-    //       )
-    //     : []
-    //
-    // return new Message(header, question, answers, authority, additional)
-
     let answers: ResourceRecord[] = []
     let authority: ResourceRecord[] = []
     let additional: ResourceRecord[] = []
-    // if (header.qr === 0) {
-    //   // query
     const question = Question.fromBuffer(buffer.subarray(headerLength))
 
     const answerOffset = headerLength + question.length
@@ -136,9 +97,6 @@ export default class Message implements IMessage {
       }
     }
     return new Message(header, question, answers, authority, additional)
-    // } else {
-    //   return new Message(header, undefined, answers, authority, additional)
-    //   }
   }
 
   public toBuffer(): Buffer {
